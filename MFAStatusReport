@@ -1,0 +1,4 @@
+#MFA Script- this will grab all ENABLED users that have a license along with Usagelocation(what country the license is activated on), office, state, displayname, first name, lastname, city, country, title, department, when it was created, UPN. You can add more depending on your needs, this is what I needed. 
+# To get all users regardless of account and license status delete "-enabledfilter enabledonly" leave -all there. 
+
+Get-MsolUser -enabledFilter EnabledOnly -all | Where-Object { $_.isLicensed -eq "TRUE" } | select Usagelocation,Office,state,DisplayName,Firstname,lastname,City,Country,title,Department,WhenCreated,UserPrincipalName,@{N="MFA Status"; E={ if( $_.StrongAuthenticationRequirements.State -ne $null){ $_.StrongAuthenticationRequirements.State} else { "Disabled"}}}| Export-Csv "C:\temp\MFAStatusReport $(get-date -f yyyy-MM-dd).csv" -NoTypeInformation
