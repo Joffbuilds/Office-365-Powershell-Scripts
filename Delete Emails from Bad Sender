@@ -1,0 +1,13 @@
+#This will find all emails sent from BADSENDER@DOMAIN.COM and for each email, it will grab the emails and place it in my designated spambox, then delete from all users mailboxes. I do this so I can later investigate the mail without having the user forwarding the mail to me. 
+
+$Phishingemail = "BADSENDER@DOMAIN.COM"
+Get-MessageTrace -SenderAddress "$PhishingEmail" | foreach {
+
+$user = $_.RecipientAddress 
+
+$PhishingEmail.ToString()
+$SearchQuery = @"
+from:"$PhishingEmail"
+"@
+
+Search-Mailbox -identity $user -searchquery ($($SearchQuery)) -TargetMailbox "spam@mydomain" -TargetFolder "SpamFound" -DeleteContent -Verbose}
